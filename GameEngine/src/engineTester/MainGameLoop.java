@@ -5,6 +5,10 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import models.Loader;
+import models.Mesh;
+import renderEngine.Renderer;
+
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -45,12 +49,14 @@ public class MainGameLoop {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 		
 		//Create the window
-		window = glfwCreateWindow(1280, 720, "First OpenGL", NULL, NULL);
+		window = glfwCreateWindow(1280, 720, "gameEngine", NULL, NULL);
 		if (window == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 		
 		//Setup a key callback. It will be called every time a key is pressed, repeated or released
+		
+		//TODO: replace with actual inputs from an input class
 		glfwSetKeyCallback(window,(window,key,scancode,action,mods) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 				glfwSetWindowShouldClose(window,true);
@@ -94,16 +100,36 @@ public class MainGameLoop {
 		// Set the clear color
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
+		
+		  float[] vertices = {
+				    -0.5f, 0.5f, 0f,
+				    -0.5f, -0.5f, 0f,
+				    0.5f, -0.5f, 0f,
+				    0.5f, -0.5f, 0f,
+				    0.5f, 0.5f, 0f,
+				    -0.5f, 0.5f, 0f
+				  };
+		  
+		  Mesh test = Loader.loadToVAO(vertices);
+
+		
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			glfwSwapBuffers(window); // swap the color buffers
-
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
+			
+			
+			
+			//update game state
+			
+			//render
+			Renderer.render(test);
+
+			glfwSwapBuffers(window); // swap the color buffers
 		}
 	}
 	
@@ -121,5 +147,7 @@ public class MainGameLoop {
 	public static void main(String args[]) {
 		new MainGameLoop().run();
 	}
+	
+	
 	
 }
