@@ -8,6 +8,7 @@ import org.lwjgl.system.*;
 import models.Loader;
 import models.Mesh;
 import renderEngine.Renderer;
+import shaders.EntityShader;
 
 import java.nio.*;
 
@@ -111,7 +112,7 @@ public class MainGameLoop {
 		  int[] indices = {0,1,2,2,3,4};
 		  
 		  Mesh test = Loader.loadToVAO(vertices,indices);
-
+		  EntityShader s = new EntityShader();
 		
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -122,7 +123,7 @@ public class MainGameLoop {
 			// invoked during this call.
 			glfwPollEvents();
 			
-			
+			s.start();
 			
 			//update game state
 			
@@ -130,6 +131,8 @@ public class MainGameLoop {
 			Renderer.render(test);
 
 			glfwSwapBuffers(window); // swap the color buffers
+			
+			s.stop();
 		}
 	}
 	
