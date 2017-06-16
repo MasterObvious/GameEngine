@@ -14,8 +14,8 @@ public class Renderer {
 		glBindVertexArray(model.getVaoID());
 		//enable the vertex attributes
 		glEnableVertexAttribArray(0);
-		//draw the array with the vertex count
-		glDrawArrays(GL_TRIANGLES,0,model.getVertexCount());
+		//draw each triangle using the element array buffer
+		glDrawElements(GL_TRIANGLES,model.getVertexCount(),GL_UNSIGNED_INT,0);
 		//dsiable the attribute
 		glDisableVertexAttribArray(0);
 		//unbind the vao

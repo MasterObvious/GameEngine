@@ -105,12 +105,12 @@ public class MainGameLoop {
 				    -0.5f, 0.5f, 0f,
 				    -0.5f, -0.5f, 0f,
 				    0.5f, -0.5f, 0f,
-				    0.5f, -0.5f, 0f,
 				    0.5f, 0.5f, 0f,
 				    -0.5f, 0.5f, 0f
 				  };
+		  int[] indices = {0,1,2,2,3,4};
 		  
-		  Mesh test = Loader.loadToVAO(vertices);
+		  Mesh test = Loader.loadToVAO(vertices,indices);
 
 		
 		// Run the rendering loop until the user has attempted to close
