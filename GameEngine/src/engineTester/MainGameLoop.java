@@ -5,8 +5,9 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import models.Loader;
+import loaders.Loader;
 import models.Mesh;
+import models.TexturedModel;
 import renderEngine.Renderer;
 import shaders.EntityShader;
 
@@ -99,7 +100,7 @@ public class MainGameLoop {
 		GL.createCapabilities();
 
 		// Set the clear color
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		
 		  float[] vertices = {
@@ -111,7 +112,16 @@ public class MainGameLoop {
 				  };
 		  int[] indices = {0,1,2,2,3,4};
 		  
-		  Mesh test = Loader.loadToVAO(vertices,indices);
+		  float[] textureCoords = {
+				  0,0,
+				  0,1,
+				  1,1,
+				  1,0
+		  };
+		  
+		  Loader l = new Loader();
+		  Mesh test = l.loadToVAO(vertices,textureCoords,indices);
+		  TexturedModel text = new TexturedModel(test,l.loadTexture("brick"));
 		  EntityShader s = new EntityShader();
 		
 		// Run the rendering loop until the user has attempted to close
@@ -128,12 +138,15 @@ public class MainGameLoop {
 			//update game state
 			
 			//render
-			Renderer.render(test);
+			Renderer.render(text);
 
 			glfwSwapBuffers(window); // swap the color buffers
 			
 			s.stop();
 		}
+		
+		s.cleanUp();
+		l.cleanUp();
 	}
 	
 	private void kill() {

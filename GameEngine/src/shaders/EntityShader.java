@@ -14,6 +14,7 @@ public class EntityShader extends ShaderProgram {
 	public void bindAttributes() {
 		//bind the position
 		bindAttribute(0,"position");
+		bindAttribute(1,"textureCoords");
 	}
 
 }

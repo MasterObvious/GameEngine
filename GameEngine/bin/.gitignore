@@ -1,4 +1,6 @@
 /models/
-/renderEngine/
 /engineTester/
+/loaders/
+/textures/
+/renderEngine/
 /shaders/
