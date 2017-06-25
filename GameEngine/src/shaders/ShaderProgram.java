@@ -3,6 +3,13 @@ package shaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -28,9 +35,26 @@ public abstract class ShaderProgram {
 		//link and validate the program
 		glLinkProgram(programID);
 		glValidateProgram(programID);
+		//get all uniform locations
+		getAllUniformLocations();
 	}
 	
 	public abstract void bindAttributes();
+	
+	public abstract void getAllUniformLocations();
+	
+	public int getUniformLocation(String uniformName) {
+		//get a specific location of a uniform
+		return glGetUniformLocation(programID,uniformName);
+	}
+	
+	
+	public void loadUniform(int location, Matrix4f matrix) {
+		//loads a 4x4 matrix into the specified locatiton
+		FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+		matrix.get(matrixBuffer);
+		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+	}
 	
 	public void bindAttribute(int attributeNumber, String variableName) {
 		//associate an attribute number with a variable name

@@ -1,10 +1,14 @@
 package engineTester;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import entities.Camera;
+import entities.StaticEntity;
 import loaders.Loader;
 import models.Mesh;
 import models.TexturedModel;
@@ -24,7 +28,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class MainGameLoop {
 
 	private long window;
-	
+	private int width = 1280;
+	private int height = 720;
 	
 	public void run() {
 		System.out.println("Using LWJGL " + Version.getVersion());
@@ -51,7 +56,7 @@ public class MainGameLoop {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 		
 		//Create the window
-		window = glfwCreateWindow(1280, 720, "gameEngine", NULL, NULL);
+		window = glfwCreateWindow(width, height, "gameEngine", NULL, NULL);
 		if (window == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
@@ -122,7 +127,12 @@ public class MainGameLoop {
 		  Loader l = new Loader();
 		  Mesh test = l.loadToVAO(vertices,textureCoords,indices);
 		  TexturedModel text = new TexturedModel(test,l.loadTexture("brick"));
+		  
+		  StaticEntity e = new StaticEntity(text, new Vector3f(0,0,-5),new Vector3f(0,0,0));
+		  
 		  EntityShader s = new EntityShader();
+		  
+		  Camera c = new Camera();
 		
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -136,9 +146,11 @@ public class MainGameLoop {
 			s.start();
 			
 			//update game state
-			
+			c.incrementPosition(0,0,-0.01f);
 			//render
-			Renderer.render(text);
+			Matrix4f mvp = c.getProjectionMatrix(width, height).mul(c.getViewMatrix().mul(e.getModelMatrix()));
+			s.loadUniform(EntityShader.MVP_MATRIX, mvp);
+			Renderer.render(e.getModel());
 
 			glfwSwapBuffers(window); // swap the color buffers
 			
